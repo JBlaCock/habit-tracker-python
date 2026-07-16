@@ -114,8 +114,13 @@ class Habit:
             expected_gap = timedelta(days=1)
 
         elif self.periodicity == "weekly":
-            values = sorted(set(value.isocalendar().week for value in self.completions))
-            expected_gap = 1
+            values = sorted(
+                set(
+                    value.date() - timedelta(days=value.weekday())
+                    for value in self.completions
+                )
+            )
+            expected_gap = timedelta(weeks=1)
 
         return values, expected_gap
 
@@ -249,6 +254,26 @@ class HabitManager:
             return False
 
         self.habits.remove(habit)
+        return True
+
+    def edit_habit(self, habit_id: int, name: str, periodicity: str) -> bool:
+        """Edit an existing habit's name and periodicity."""
+        habit = self.find_habit(habit_id)
+
+        if habit is None:
+            return False
+
+        if not name.strip():
+            raise ValueError("Habit name cannot be empty.")
+
+        periodicity = periodicity.lower()
+
+        if periodicity not in {"daily", "weekly"}:
+            raise ValueError("Periodicity must be daily or weekly.")
+
+        habit.name = name.strip()
+        habit.periodicity = periodicity
+
         return True
 
     def report(self):

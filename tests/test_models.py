@@ -1,7 +1,7 @@
 from datetime import datetime
 import pytest
 
-from models import Habit
+from models import Habit, HabitManager
 
 
 def test_habit_is_created_with_valid_data():
@@ -22,6 +22,26 @@ def test_periodicity_is_converted_to_lowercase():
 def test_invalid_periodicity_raises_value_error():
     with pytest.raises(ValueError):
         Habit(1, "Exercise", "monthly")
+
+
+def test_add_habit_stores_habit_in_manager():
+    manager = HabitManager()
+    habit = Habit(1, "Run", "daily")
+
+    manager.add_habit(habit)
+
+    assert manager.find_habit(1) is habit
+    assert manager.habit_count() == 1
+
+
+def test_weekly_streak_continues_across_year_boundary():
+    habit = Habit(1, "Gym", "weekly")
+
+    habit.complete(datetime(2026, 12, 28))
+    habit.complete(datetime(2027, 1, 4))
+    habit.complete(datetime(2027, 1, 11))
+
+    assert habit.longest_streak() == 3
 
 
 def test_complete_adds_completion_date():
@@ -133,3 +153,36 @@ def test_weekly_longest_streak():
     habit.complete(datetime(2026, 6, 29))
 
     assert habit.longest_streak() == 3
+
+
+def test_delete_habit_removes_existing_habit():
+    manager = HabitManager()
+    habit = Habit(1, "Run", "daily")
+
+    manager.add_habit(habit)
+
+    result = manager.delete_habit(1)
+
+    assert result is True
+    assert manager.find_habit(1) is None
+    assert manager.habit_count() == 0
+
+
+def test_edit_habit_updates_name_and_periodicity():
+    manager = HabitManager()
+    habit = Habit(1, "Run", "daily")
+    manager.add_habit(habit)
+
+    result = manager.edit_habit(1, "Long Run", "weekly")
+
+    assert result is True
+    assert habit.name == "Long Run"
+    assert habit.periodicity == "weekly"
+
+
+def test_edit_habit_returns_false_for_missing_habit():
+    manager = HabitManager()
+
+    result = manager.edit_habit(999, "Long Run", "weekly")
+
+    assert result is False

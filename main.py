@@ -164,8 +164,9 @@ if __name__ == "__main__":
         print("2. Add habit")
         print("3. Complete habit")
         print("4. Analytics")
-        print("5. Delete habit")
-        print("6. Save")
+        print("5. Edit habit")
+        print("6. Delete habit")
+        print("7. Save")
         print("0. Exit")
 
         choice = input("Choice: ")
@@ -235,6 +236,25 @@ if __name__ == "__main__":
         elif choice == "5":
             habit_id = int_input("Habit ID: ")
 
+            habit = manager.find_habit(habit_id)
+
+            if habit is None:
+                print("Habit not found.")
+                continue
+
+            name = input("New habit name: ").strip()
+            periodicity = input("New periodicity (daily, weekly): ").strip()
+
+            try:
+                manager.edit_habit(habit_id, name, periodicity)
+                save_habits(manager, "habits.json")
+                print("Habit updated.")
+            except ValueError as error:
+                print(error)
+
+        elif choice == "6":
+            habit_id = int_input("Habit ID: ")
+
             deleted = manager.delete_habit(habit_id)
 
             if deleted:
@@ -244,7 +264,7 @@ if __name__ == "__main__":
             else:
                 print("Habit not found.")
 
-        elif choice == "6":
+        elif choice == "7":
             save_habits(manager, "habits.json")
             print("Habits saved.")
 

@@ -17,7 +17,7 @@ This project was built to practise:
 
 ## Tech Stack
 
-* Python 3.12
+* Python 3.11+
 * pytest
 * JSON file persistence
 
@@ -34,9 +34,17 @@ habit_tracker/
 │
 ├── tests/
 │   ├── test_models.py
+│   ├── test_analytics.py
 │   └── test_storage.py
 │
+├── screenshots/
+│   ├── analytics_output.png
+│   ├── cli_output.png
+│   └── pytest_results.png
+│
+├── requirements.txt
 └── README.md
+
 
 ```
 
@@ -45,8 +53,8 @@ habit_tracker/
 Clone the repository:
 
 ```bash
-git clone <repository-url>
-cd habit_tracker
+git clone https://github.com/JBlaCock/habit-tracker-python.git
+cd habit-tracker-python
 ```
 
 (Optional) Create and activate a virtual environment:
@@ -77,13 +85,14 @@ pytest -q
 Expected result:
 
 ```text
-20 passed
+29 passed
 ```
 
 ## Features
 
 * Create new habits
 * Delete existing habits
+* Edit existing habits
 * Mark habits as complete
 * Store daily or weekly habit periodicity
 * Validate habit periodicity
@@ -140,6 +149,7 @@ Main behavior:
 * Filter completed and uncompleted habits
 * Filter daily and weekly habits
 * Find due habits
+* Edit habits
 * Generate a report
 
 ### Command-Line Interface
@@ -149,16 +159,23 @@ The app runs from `main.py`.
 The menu allows the user to:
 
 * Show habits
-* Save habits
-* Complete a habit
-* View analytics
-* Add a habit
-* Delete a habit
-* Exit the app
+* Add habit
+* Complete habit
+* Analytics
+* Edit habit
+* Delete habit
+* Save
 
 ### Analytics
 
 Analytics are implemented as separate functions in `analytics.py`.
+
+#### Required Analytics
+
+* Return all tracked habits
+* Return habits by periodicity
+* Return the longest streak across all habits
+* Return the longest streak for a specific habit
 
 Available analytics include:
 
@@ -220,6 +237,13 @@ Tests verify:
 * Loading habit data
 * File persistence behavior
 * Error handling
+* Habit editing
+* Habit deletion
+* Analytics functions
+* Daily streak calculations
+* Weekly streak calculations
+* Cross-year weekly streak calculations
+* Predefined fixture data
 
 ## Design
 
@@ -251,13 +275,13 @@ Responsibilities:
 ```text
 PS> py main.py
 
-Habit Tracker
 1. Show habits
-2. Save
+2. Add habit
 3. Complete habit
 4. Analytics
-5. Add habit
+5. Edit habit
 6. Delete habit
+7. Save
 0. Exit
 
 Choice: 1
@@ -282,6 +306,22 @@ The application includes 5 predefined habits:
 
 The `habits.json` file contains 4 weeks of example tracking data for these habits. This data acts as a test fixture and allows the app and analytics functions to be tested with realistic habit completion records.
 
+The predefined dataset is also used directly in automated tests to verify streak calculations.
+
+## Screenshots
+
+### Analytics
+
+![Analytics](screenshots/analytics_output.png)
+
+### CLI
+
+![CLI](screenshots/cli_output.png)
+
+### Tests
+
+![Tests](screenshots/pytest_results.png)
+
 
 ## What I Learned
 
@@ -298,7 +338,6 @@ Through this project, I practiced:
 
 ## Future Improvements
 
-* Add habit editing
 * Add more analytics and reports
 * Improve the command-line interface
 * Add monthly statistics

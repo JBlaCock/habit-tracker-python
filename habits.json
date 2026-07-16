@@ -82,12 +82,5 @@
             "2026-06-08T00:00:00",
             "2026-06-22T00:00:00"
         ]
-    },
-    {
-        "habit_id": 7,
-        "name": "Code",
-        "periodicity": "daily",
-        "created_at": "2026-06-24T16:02:47.083942",
-        "completions": []
     }
 ]
